@@ -5,12 +5,12 @@
 
 export const twoFer = (nome) => {
   
-  
-  if( nome != undefined){
+  //testa se a entrada é indefinida e diferente de vazia
+  if( nome != undefined && nome != '' ){
     return 'One for '+ nome + ', one for me.';
   }
-  
-  else{
+  // testa se a entrada é nula ou indefinida ou vazia
+  if (nome == null || nome == undefined || nome == '' ){
     return 'One for you, one for me.';
   }
 

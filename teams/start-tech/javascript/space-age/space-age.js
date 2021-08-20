@@ -43,9 +43,8 @@ export const age = (planeta, segundos) => {
       anoNovoPlaneta = 164.79132;
       break;
     default: 
-      throw "Parâmetro inválido"; // retorna o erro escrito
-
-    //  return -1; // retorna erro, caso não seja nenhum desses planetas
+     // throw "Parâmetro inválido"; // retorna o erro escrito
+      return -1; // retorna erro, caso não seja nenhum desses planetas
   }
 
 // calculo a idade no novo planeta

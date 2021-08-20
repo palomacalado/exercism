@@ -6,19 +6,19 @@ describe('Space Age', () => {
   });
 
   test('age on Trololo', () => {
-    expect(age('trololo', 1000000000)).toThrowError("Parâmetro inválido");
+    expect(() =>age('trololo', 1000000000)).toThrowError("Parâmetro inválido");
   });
 
   test('age on Underfined', () => {
-    expect(age(undefined, 1000000000)).toEqual(-1);
+    expect(() =>age(undefined, 1000000000)).toThrow();
   });
 
   test('age on null', () => {
-    expect(age(null, 1000000000)).toEqual(-1);
+    expect(() =>age(null, 1000000000)).toThrow(Error);
   });
 
   test('age on "" ', () => {
-    expect(age('', 1000000000)).toEqual(-1);
+    expect(() =>age('', 1000000000)).toThrow("Parâmetro inválido");
   });
 
   test('age on Mercury', () => {

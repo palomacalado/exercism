@@ -42,10 +42,20 @@ export const age = (planeta, segundos) => {
     case 'neptune':
       anoNovoPlaneta = 164.79132;
       break;
+    default: 
+      throw "Parâmetro inválido"; // retorna o erro escrito
+
+    //  return -1; // retorna erro, caso não seja nenhum desses planetas
   }
 
 // calculo a idade no novo planeta
-idadeNovoPlaneta = parseFloat((segundos/anoNovoPlaneta/segundosEmAnoTerrestre).toFixed(2));
+let anoFinal = segundos/anoNovoPlaneta/segundosEmAnoTerrestre;
+
+// toFixed fixa o resultado em duas casas decimais, mas retorna uma string
+// parseFloalt converte a string em número
+//idadeNovoPlaneta = parseFloat(anoFinal.toFixed(2));
+
+idadeNovoPlaneta = +(anoFinal.toFixed(2));
 
 return idadeNovoPlaneta;
 };

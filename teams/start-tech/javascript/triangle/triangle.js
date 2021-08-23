@@ -5,35 +5,58 @@
 
 import { triggerAsyncId } from "async_hooks";
 
+
 export class Triangle {
-  constructor(lado1,lado2,lado3) {
-    this.lado1 = lado1;
-    this.lado2 = lado2;
-    this.lado3 = lado3;
+  ladoA = 0;
+  ladoB = 0;
+  ladoC = 0;
+
+  constructor(...lados) {
+    this.ladoA = lados[0];
+    this.ladoB = lados[1];
+    this.ladoC = lados[2];
 
   }
+  //método que testa se os parâmetros passados caracterizam um triangulo
+  get ehValido(){
+
+    // se todos os lados são maiore que zero
+    return this.ladoA > 0 && this.ladoB > 0 && this.ladoC;
+  };
+  
+  // confere se a soma de dois lados do triangulo é maior ou igial ao terceiro lado
+  
+  get ehDesigual(){
+    
+    const ehBaseseValidaA = (this.ladoA + this.ladoB) >= this.ladoC;
+    const ehBaseseValidaB = (this.ladoB + this.ladoC) >= this.ladoA;
+    const ehBaseseValidaC = (this.ladoC + this.ladoA) >= this.ladoB;
+     return ( ehBaseseValidaA && ehBaseseValidaB && ehBaseseValidaC) ;
+  };
+
+  // confere se a entrada é um triangulo válido
+  get ehTrianguloValido(){
+    return this.ehValido && this.ehDesigual;
+  };
 
   get isEquilateral() {
 
-    let somaTresLados = Triangle.lado1 +Triangle.lado2 + Triangle.lado3;
+  return this.ehTrianguloValido && (this.ladoA  == this.ladoB && this.ladoB == this.ladoC); 
 
-    if (somaTresLados>)
-    switch(Triangle){
-      case (somaTresLados>180) :
-        return "não é um triângulo";
-    }
-
-   /* if((Triangle.lado1 === Triangle.lado2) && (Triangle.lado2 === Triangle.lado3)){
+   /* if((Triangle.ladoA === Triangle.ladoB) && (Triangle.ladoB === Triangle.ladoC)){
       return true;
     }*/
 
-  }
-
+  };
+  //confere se o triangulo é válido e se pelo menos dois lados são iguais 
   get isIsosceles() {
-    throw new Error('Remove this statement and implement this function');
+    return this.ehTrianguloValido && (this.ladoA === this.ladoB || this.ladoB === this.ladoC || this.ladoA === this.ladoC);
   }
 
+  //confere se o triangulo é valido e se todos os lados têm tamanhos diferentes
   get isScalene() {
-    throw new Error('Remove this statement and implement this function');
+    return this.ehTrianguloValido && (this.ladoA !== this.ladoB && this.ladoB !== this.ladoC && this.ladoA !== this.ladoC);
   }
+
+
 }

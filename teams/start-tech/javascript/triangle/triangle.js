@@ -57,6 +57,9 @@ export class Triangle {
   get isScalene() {
     return this.ehTrianguloValido && (this.ladoA !== this.ladoB && this.ladoB !== this.ladoC && this.ladoA !== this.ladoC);
   }
+  // confere se a soma de dois lados é igual ao terceiro lado
+  get isDegenerate(){
+return this.ehTrianguloValido && (this.ladoA +this.ladoB === this.ladoC || this.ladoB + this.ladoC === this.ladoA || this.ladoA + this.ladoC === this.ladoB);
 
-
+  }
 }

@@ -1,6 +1,6 @@
 //
 // This is only a SKELETON file for the 'diferencas
-' exercise. It's been provided as a
+// exercise. It's been provided as a
 // convenience to get you started writing code faster.
 //
 

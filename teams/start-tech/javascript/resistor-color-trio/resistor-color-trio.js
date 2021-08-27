@@ -40,11 +40,19 @@ export class ResistorColorTrio {
       throw new Error('invalid color');
     }
 
-    if (Math.log10(valorTotal) < 3){
+    let numeroDeZeros = +(Math.log10(valorTotal). toFixed(2));
+    
+
+    if (numeroDeZeros < 3 ){
       return `Resistor value: ${valorTotal} ohms`;
     
-    }else{
-      return `Resistor value: ${valorTotal/1000} kiloohms`;
+    }else if(numeroDeZeros < 5 || numeroDeZeros < 6){// por conta das casas decimais do log
+      return `Resistor value: ${valorTotal/1000} kiloohms`
+      
+    }else if (numeroDeZeros < 8 || numeroDeZeros < 9){ 
+      return `Resistor value: ${valorTotal/1000000} megaohms`;
+    }else {
+      return `Resistor value: ${valorTotal/1000000000} gigaohms`;
     }
 
   }

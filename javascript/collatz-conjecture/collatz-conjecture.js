@@ -17,10 +17,12 @@ export const steps = (numero) => {
   while(numeroAux !== 1){
     if (numeroAux %2 === 0) {
       numeroAux = numeroAux/2;
+      contador++;
     }else{
       numeroAux = 3*numeroAux +1;
+      contador ++;
     }
-    contador ++;
+    
   }
 
   return contador;

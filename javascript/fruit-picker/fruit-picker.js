@@ -16,7 +16,13 @@ import { checkStatus, checkInventory } from './grocer';
  * @return {boolean}
  */
 export function isServiceOnline() {
-  throw new Error('Implement the isServiceOnline function');
+  function callback(status){ // isso é um callback
+    return status === 'ONLINE'; // se o retorno é online ele retornará true
+  }
+  
+  return checkStatus(callback);
+
+  // ou return checkStatus((storeStatus => storeSatus === 'ONLINE';)
 }
 
 /**
@@ -28,7 +34,12 @@ export function isServiceOnline() {
  * @return {AvailabilityAction} the result from checkInventory
  */
 export function pickFruit(variety, quantity, callback) {
-  throw new Error('Implement the pickFruit function');
+  const objetoASerPassado = {
+    variety: variety,
+    quantity: quantity
+  } 
+
+  return checkInventory(objetoASerPassado, callback);
 }
 
 /**
@@ -39,7 +50,10 @@ export function pickFruit(variety, quantity, callback) {
  * @return {AvailabilityAction} whether the fruit was purchased 'PURCHASE' or 'NOOP'
  */
 export function purchaseInventoryIfAvailable(err, isAvailable) {
-  throw new Error('Implement the purchaseInventoryIfAvailable function');
+
+  if(err != null) throw new Error(err);
+
+  return isAvailable ? 'PURCHASE' : 'NOOP';
 }
 
 /**
@@ -50,5 +64,5 @@ export function purchaseInventoryIfAvailable(err, isAvailable) {
  * @return {AvailabilityAction} whether the fruit was purchased 'PURCHASE' or 'NOOP'
  */
 export function pickAndPurchaseFruit(variety, quantity) {
-  throw new Error('Implement the pickAndPurchaseFruit function');
+  return pickFruit(variety,quantity,purchaseInventoryIfAvailable);
 }

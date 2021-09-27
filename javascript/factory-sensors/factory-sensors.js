@@ -1,5 +1,7 @@
 // @ts-check
 
+import { assertFunctionDeclaration } from "@babel/types";
+
 export class ArgumentError extends Error {}
 
 export class OverheatingError extends Error {
@@ -16,7 +18,12 @@ export class OverheatingError extends Error {
  * @throws {Error}
  */
 export function checkHumidityLevel(humidityPercentage) {
-  throw new Error('Implement the checkHumidity function');
+
+  if (humidityPercentage > 70){
+    throw new Error();
+
+  }
+  return;
 }
 
 /**
@@ -26,7 +33,13 @@ export function checkHumidityLevel(humidityPercentage) {
  * @throws {ArgumentError|OverheatingError}
  */
 export function reportOverheating(temperature) {
-  throw new Error('Implement the reportOverheating function');
+
+  if(temperature === null){
+    throw new ArgumentError();
+  }
+  if (temperature > 500) {
+    throw new OverheatingError(temperature);
+  }
 }
 
 /**
@@ -41,5 +54,23 @@ export function reportOverheating(temperature) {
  * @throws {ArgumentError|OverheatingError|Error}
  */
 export function monitorTheMachine(actions) {
-  throw new Error('Implement the monitorTheMachine function');
-}
+
+  try{
+    actions.check();
+  }catch (error){ // actions.check() lança erros e o cach recebe e trata cada um deles
+    if(error instanceof ArgumentError){ // se o erro for do tipo argumentError
+      actions.alertDeadSensor();
+
+    } else if(error instanceof OverheatingError && error.temperature >= 600){
+      actions.shutdown();
+    }
+    else if(error instanceof OverheatingError && error.temperature < 600) {
+      actions.alertOverheating();
+    }
+    else{
+      throw error ;
+    }
+    
+  }
+
+  }

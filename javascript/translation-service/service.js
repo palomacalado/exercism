@@ -1,4 +1,7 @@
 /// <reference path="./global.d.ts" />
+
+import { text } from "stream/consumers";
+
 // @ts-check
 //
 // The lines above enable type checking for this file. Various IDEs interpret
@@ -27,7 +30,14 @@ export class TranslationService {
    * @returns {Promise<string>}
    */
   free(text) {
-    throw new Error('Implement the free function');
+    return new Promise ((resolve,reject)=>{
+      this.api.fetch(text)
+                .then(result => resolve (result.translation))
+                .catch(error =>reject (error));
+    });
+
+
+
   }
 
   /**
@@ -40,9 +50,54 @@ export class TranslationService {
    * @param {string[]} texts
    * @returns {Promise<string[]>}
    */
-  batch(texts) {
-    throw new Error('Implement the batch function');
+   batch(texts) {
+    return new Promise((resolve,reject) =>{
+
+      if( !texts || texts.length == 0 ){
+        reject(new BatchIsEmpty());
+      }
+      let promise = [];
+
+      for(let i =0;i< texts.length;i++){
+        promise.push(this.api.fetch(texts[i]));
+
+      }
+     
+      return Promise.all(promise).then(result => resolve(result.map(item => item.translation)))
+      .catch(error => reject(error));
+
+    })
   }
+
+  /*async batch(texts) {
+    if(texts == null || texts.length === 0){
+      throw new BatchIsEmpty();
+    }
+    let traduzido = [];
+    for (const texto of texts) {
+     const traducao = await this.api.fetch(texto);
+     traduzido.push(traducao.translation);
+   
+    }
+      return traduzido;
+  }*/
+
+
+  /* return new Promise((resolve,reject) =>{
+      let traduzidos = [];
+      
+      for(let i =0;i< texts.length;i++){
+        this.api.fetch(texts[i])
+                  .then(result => traduzidos.push(result.translation))
+                  .catch(error => {
+                    reject(error);
+                    
+                  });
+      }
+
+      resolve(traduzidos);
+
+    });*/
 
   /**
    * Requests the service for some text to be translated.
@@ -53,8 +108,23 @@ export class TranslationService {
    * @param {string} text
    * @returns {Promise<void>}
    */
-  request(text) {
-    throw new Error('Implement the request function');
+   batch(texts) {
+    return new Promise((resolve,reject) =>{
+
+      if( !texts || texts.length == 0 ){
+        reject(new BatchIsEmpty());
+      }
+      let promise = [];
+
+      for(let i =0;i< texts.length;i++){
+        promise.push(this.api.fetch(texts[i]));
+
+      }
+     
+      return Promise.all(promise).then(result => resolve(result.map(item => item.translation)))
+      .catch(error => reject(error));
+
+    })
   }
 
   /**
@@ -67,10 +137,21 @@ export class TranslationService {
    * @param {number} minimumQuality
    * @returns {Promise<string>}
    */
-  premium(text, minimumQuality) {
-    throw new Error('Implement the premium function');
+   async premium(text, minimumQuality) {
+    try{
+      let resultado = await this.api.fetch(text);
+      if (resultado.quality >= minimumQuality) {
+       return resultado.translation; 
+      } else throw new QualityThresholdNotMet ();   
+    } catch (error) {
+      if (error instanceof NotAvailable){
+        await this.request(text); 
+        return (await this.api.fetch(text)).translation;
+      } else throw error;
   }
 }
+}
+
 
 /**
  * This error is used to indicate a translation was found, but its quality does

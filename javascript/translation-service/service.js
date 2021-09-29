@@ -1,6 +1,7 @@
 /// <reference path="./global.d.ts" />
 
-import { text } from "stream/consumers";
+import { NotAvailable } from "./errors";
+
 
 // @ts-check
 //
@@ -29,15 +30,23 @@ export class TranslationService {
    * @param {string} text
    * @returns {Promise<string>}
    */
-  free(text) {
-    return new Promise ((resolve,reject)=>{
+   
+  // EQUIVALENTE A LINHA 40 utilizando async / await
+  // async free(text) {
+  
+  //   // let resultado; 
+  //   // resultado = await this.api.fetch(text); 
+  //   // return resultado.translation;
+
+
+  // }
+
+  free (text) {
+    return new Promise ((resolve, reject) => {
       this.api.fetch(text)
-                .then(result => resolve (result.translation))
-                .catch(error =>reject (error));
-    });
-
-
-
+              .then (result => resolve(result.translation))
+              .catch(error => reject(error)); 
+    })
   }
 
   /**
@@ -50,54 +59,17 @@ export class TranslationService {
    * @param {string[]} texts
    * @returns {Promise<string[]>}
    */
-   batch(texts) {
-    return new Promise((resolve,reject) =>{
-
-      if( !texts || texts.length == 0 ){
-        reject(new BatchIsEmpty());
-      }
-      let promise = [];
-
-      for(let i =0;i< texts.length;i++){
-        promise.push(this.api.fetch(texts[i]));
-
-      }
-     
-      return Promise.all(promise).then(result => resolve(result.map(item => item.translation)))
-      .catch(error => reject(error));
-
-    })
-  }
-
-  /*async batch(texts) {
-    if(texts == null || texts.length === 0){
-      throw new BatchIsEmpty();
+  async batch(texts) {
+    if (texts == null || texts.length === 0) {
+      throw new BatchIsEmpty ();
     }
-    let traduzido = [];
+    let traduzido = []; 
     for (const texto of texts) {
-     const traducao = await this.api.fetch(texto);
-     traduzido.push(traducao.translation);
-   
+      const traducao = await this.api.fetch(texto);
+      traduzido.push(traducao.translation); 
     }
-      return traduzido;
-  }*/
-
-
-  /* return new Promise((resolve,reject) =>{
-      let traduzidos = [];
-      
-      for(let i =0;i< texts.length;i++){
-        this.api.fetch(texts[i])
-                  .then(result => traduzidos.push(result.translation))
-                  .catch(error => {
-                    reject(error);
-                    
-                  });
-      }
-
-      resolve(traduzidos);
-
-    });*/
+    return traduzido;
+  }
 
   /**
    * Requests the service for some text to be translated.
@@ -108,24 +80,55 @@ export class TranslationService {
    * @param {string} text
    * @returns {Promise<void>}
    */
-   batch(texts) {
-    return new Promise((resolve,reject) =>{
+  // request(text) {
+  //     return new Promise ((resolve, reject) => {
+  //       this.requestPromise(text)
+  //           .then(resultado => resolve(undefined))
+  //           .catch(error => {
+  //             this.requestPromise(text)
+  //               .then(resultado => resolve(undefined))
+  //               .catch (error => {
+  //                 this.requestPromise(text)
+  //                   .then(resultado => resolve(undefined))
+  //                   .catch (error => reject(error));
+  //               });
+  //           });
+  //     }); 
+  //   }
 
-      if( !texts || texts.length == 0 ){
-        reject(new BatchIsEmpty());
+  async request(text) {
+      for (let index = 1; index <= 3; index++) {
+        try {
+          await this.requestPromise(text);
+          return undefined; 
+        } catch (error) {
+          if (index === 3) {
+            throw error; 
+          }
+        }
+        
       }
-      let promise = [];
-
-      for(let i =0;i< texts.length;i++){
-        promise.push(this.api.fetch(texts[i]));
-
-      }
-     
-      return Promise.all(promise).then(result => resolve(result.map(item => item.translation)))
-      .catch(error => reject(error));
-
-    })
+    }
+  
+  requestPromise (text) {
+      return new Promise ((resolve, reject) => {
+        this.api.request(text, error => {
+          if (error == null){
+            resolve(undefined);
+          } else reject (error); 
+        });
+      });
   }
+
+  // jeito da giu de resolver 
+  // const novaPromise = (busca) => {
+  //   return new Promise((resolve, reject) => {
+  //     this.api.request(busca, (erro) => erro ? reject(erro) : resolve(undefined));
+  //   })
+  // }
+  // return novaPromise(busca)
+  //   .catch(() => novaPromise(busca))
+  //   .catch(() => novaPromise(busca))
 
   /**
    * Retrieves the translation for the given text
@@ -137,12 +140,12 @@ export class TranslationService {
    * @param {number} minimumQuality
    * @returns {Promise<string>}
    */
-   async premium(text, minimumQuality) {
+  async premium(text, minimumQuality) {
     try{
       let resultado = await this.api.fetch(text);
       if (resultado.quality >= minimumQuality) {
        return resultado.translation; 
-      } else throw new QualityThresholdNotMet ();   
+      } else throw new QualityThresholdNotMet (text);   
     } catch (error) {
       if (error instanceof NotAvailable){
         await this.request(text); 
@@ -151,8 +154,6 @@ export class TranslationService {
   }
 }
 }
-
-
 /**
  * This error is used to indicate a translation was found, but its quality does
  * not meet a certain threshold. Do not change the name of this error.

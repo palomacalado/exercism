@@ -1,5 +1,14 @@
 export class Gigasecond {
-  public date(/* Parameters go here */) {
-    throw new Error('Remove this statement and implement this function')
+
+  private readonly gigaDate: number;
+  //construtor gigasecond
+  public constructor (anoInicial: Date){
+    this.gigaDate = anoInicial.getTime();
+  }
+
+
+  public date(): Date {
+    let dataNova = new Date(this.gigaDate + 1e12);
+    return dataNova;
   }
 }

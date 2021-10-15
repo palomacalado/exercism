@@ -5,9 +5,16 @@
 		},
 		{
 			"path": ".."
+		},
+		{
+			"path": "..\\..\\React"
+		},
+		{
+			"path": "..\\..\\PokeBev"
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "HTML E CSS"
+		"liveServer.settings.multiRootWorkspaceName": "React",
+		"git.ignoreLimitWarning": true
 	}
 }
